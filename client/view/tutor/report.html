@@ -1,0 +1,33 @@
+<form class="ui form">
+	<h4 class="ui dividing header">View Attendance</h4>
+	<div class="inline fields">
+		<div class="eight wide field">
+			<label>Batch</label>
+					<select class="ui dropdown" ng-options="batch as batch.code+' # '+batch.label+' - '+batch.year for batch in batches" ng-model="selectedBatch" ng-change="changeBatch()"></select>
+		</div>
+		<div class="eight wide field" ng-show="report.length>0">
+			<button class="ui right floated labeled icon button" ng-click="download()"><i class="download icon"></i>Download</button>
+		</div>
+	</div>
+</form>
+
+<table class="ui orange sortable celled table" ng-show="report.length>0">
+	<tr>
+		<th>Student</th>
+		<th class="center aligned">Total</th>
+		<th class="center aligned">Presence</th>
+		<th class="center aligned">Absence</th>
+		<th class="center aligned">Attendence Percentage</th>
+	</tr>
+	<tr ng-repeat="record in report">
+		<td><div class="ui ribbon label"># {{record.student.roll}}. {{record.student.name}}</div></td>
+		<td>{{record.total}}</td>
+		<td>{{record.presence}}</td>
+		<td>{{record.absence}}</td>
+		<td>{{record.percentage}}%</td>
+	</tr>
+</table>
+
+<div class="ui orange raised segment" ng-show="report.length>0">
+	<div id="report-chart">Your browser is not capable of painting the graph here!</div>
+</div>

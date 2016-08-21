@@ -1,0 +1,51 @@
+<div class="ui upload small modal">
+	<div class="header">Feed Student Excel File</div>
+	<div class="content">
+		<input class="ui button" type="file" file-model="studentFile"/>
+		<button class="ui positive labeled icon right floated button" ng-click="upload()"><i class="upload icon"></i>Upload</button>
+	</div>
+</div>
+
+<form class="ui form">
+	<h4 class="ui dividing header">Manage Student</h4>
+	<div class="fields">
+		<div class="two wide required field"><input type="number" ng-model="newstudent.roll" placeholder="Roll No"></div>
+		<div class="three wide required field"><input type="text" ng-model="newstudent.name" placeholder="Name"></div>
+		<div class="two wide required field"><input type="number" ng-model="newstudent.year" placeholder="Joining Year"></div>
+		<div class="three wide field"><input type="text" ng-model="newstudent.email" placeholder="Email"></div>
+		<div class="two wide field"><input type="text" ng-model="newstudent.contact" placeholder="Contact"></div>
+		<div class="two wide field"><button class="ui positive labeled icon button" ng-click="add()"><i class="save icon"></i>Add</button></div>
+		<div class="two wide field"><button class="ui labeled icon button" ng-click="show()"><i class="upload icon"></i>Upload</button></div>
+	</div>
+</form>
+<table class="ui orange table">
+	<!--  class="center aligned" -->
+	<tr><th>Roll No</th><th>Name</th><th>Joining Year</th><th>Email</th><th>Contact</th><th>Options</th></tr>
+	<tr ng-repeat="student in students" ng-init="editable=false;">
+		<td>
+			<div ng-hide="editable">{{student.roll}}</div>
+			<div ng-show="editable" class="ui input"><input type="text" placeholder="Roll #" ng-model="student.roll"></div>
+		</td>
+		<td>
+			<div ng-hide="editable">{{student.name}}</div>
+			<div ng-show="editable" class="ui input"><input type="text" placeholder="Name" ng-model="student.name"></div>
+		</td>
+		<td>
+			<div>{{student.year}}</div>
+		</td>
+		<td>
+			<div ng-hide="editable">{{student.email}}</div>
+			<div ng-show="editable" class="ui input"><input type="text" placeholder="Email" ng-model="student.email"></div>
+		</td>
+		<td>
+			<div ng-hide="editable">{{student.contact}}</div>
+			<div ng-show="editable" class="ui input"><input type="text" placeholder="Contact" ng-model="student.contact"></div>
+		</td>
+		<td>
+			<a ng-hide="editable" ng-click="editable=true;" style="cursor:pointer" title="Edit"><i class="edit icon"></i></a>
+			<a ng-show="editable" ng-click="editable=false;" style="cursor:pointer" title="Cancel"><i class="remove circle icon"></i></a>
+			<a ng-show="editable" ng-click="edit(student);editable=false;" style="cursor:pointer" title="Update"><i class="check circle icon"></i></a>
+			<a ng-hide="editable || student.active" ng-click="remove(student)" style="cursor:pointer" title="Remove"><i class="remove icon"></i></a>
+		</td>
+	</tr>
+</table>

@@ -1,0 +1,42 @@
+<div class="ui inverted teal segment">
+	<div class="ui secondary menu">
+		<a class="item" ui-sref="home"><h3><i class="book icon"></i>edugad.org</h3></a>
+		<div class="right menu">
+			<a class="ui item" ui-sref="about">About</a>
+			<a class="ui item" ng-click="show()"><i class="sign in icon"></i>Login</a>
+		</div>
+	</div>
+</div>
+
+<div class="ui login small modal">
+	<i class="close icon"></i>
+	<div class="header">Login</div>
+	<div class="content" ng-init="msged=false;">
+		<div class="ui attached segment">
+			<div class="ui two column middle aligned very relaxed stackable grid">
+  				<div class="center aligned column">
+    				<button class="ui big green labeled icon button" ng-click="msged=!msged;"><i class="signup icon"></i>Sign Up</button>
+				</div>
+				<div class="ui vertical divider">Or</div>
+				<div class="column">
+					<div class="ui form" ng-submit="login()">
+						<div class="required field">
+							<label>Username</label>
+							<input type="text" placeholder="email address" ng-model="logUser.username">
+						</div>
+						<div class="required field">
+							<label>Password</label>
+							<input type="text" placeholder="password" ng-model="logUser.password">
+						</div>
+						<div class="field">
+							<button class="ui right floated blue submit button" type="submit" ng-click="login()">Sign In</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui bottom attached error message" ng-show="msged">
+			<i class="icon warning circle"></i>Please contact admin for registration.
+		</div>
+	</div>
+</div>

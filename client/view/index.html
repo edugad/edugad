@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="edugad">
+<head>
+	<title>edugad.org</title>
+	<link rel="shortcut icon" href="/img/ico/talky.ico">
+	<link rel="stylesheet" type="text/css" href="/lib/semantic-ui/2.2.2/semantic.min.css">
+	<link rel="stylesheet" type="text/css" href="/lib/semantic-ui/2.2.2/components/icon.css">
+</head>
+<body>
+
+<div class="ui raised container segments" ng-controller="EdugadCtrl">
+  <div ui-view="header"></div>
+
+  <div ng-show="message.enabled" class="ui icon attached {{message.type}} segment message">
+  	<i class="{{message.icon}} icon"></i>
+  	<div class="content">
+  		<div class="header">{{message.head}}<button class="ui icon negative right floated button" ng-click="demessage()"><i class="remove icon"></i></button></div>
+  		<div>{{message.body}}</div>
+  	</div>
+  </div>
+
+  <div class="ui segment" ui-view="portal"></div>
+  <div ui-view="footer"></div>
+</div>
+
+<script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/lib/semantic-ui/2.2.2/semantic.min.js"></script>
+<script type="text/javascript" src="/lib/angularjs/1.5.8/angular.min.js"></script>
+<script type="text/javascript" src="/lib/angularjs/1.5.8/angular-resource.min.js"></script>
+<script type="text/javascript" src="/lib/angularjs/0.3.1/angular-ui-router.min.js"></script>
+<script type="text/javascript" src="/lib/highcharts/4.2.6/highcharts.js"></script>
+
+<script type="text/javascript" src="/config/app.js"></script>
+
+<script type="text/javascript" src="/dir/file-model-dir.js"></script>
+
+<script type="text/javascript" src="/serv/file-upload-serv.js"></script>
+
+<script type="text/javascript" src="/ctrl/edugad/edugad-ctrl.js"></script>
+<script type="text/javascript" src="/ctrl/edugad/menu-ctrl.js"></script>
+
+<script type="text/javascript" src="/ctrl/tutor/student-ctrl.js"></script>
+<script type="text/javascript" src="/ctrl/tutor/batch-ctrl.js"></script>
+<script type="text/javascript" src="/ctrl/tutor/attendance-ctrl.js"></script>
+<script type="text/javascript" src="/ctrl/tutor/report-ctrl.js"></script>
+
+</body>
+</html>

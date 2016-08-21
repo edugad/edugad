@@ -1,0 +1,74 @@
+<form class="ui form">
+	<h4 class="ui dividing header">Take Attendance</h4>
+	<div class="fields">
+		<div class="eight wide field">
+			<div class="ui grid">
+				<div class="sixteen wide column">
+					<label>Faculty</label>
+					<div class="ui disabled input"><input type="text" placeholder="Auto-populated" ng-model="filter.faculty"></div>
+				</div>
+				<div class="sixteen wide column">
+					<label>Batch</label>
+					<select class="ui dropdown" ng-options="batch as batch.code+' # '+batch.label+' - '+batch.year for batch in batches" ng-model="filter.batch" ng-change="changeBatch()"></select>
+				</div>
+				<div class="sixteen wide column">
+					<label>Date</label>
+					<div class="ui left corner labeled input">
+						<input type="date" placeholder="yyyy-MM-dd" ng-model="filter.date" required>
+						<div class="ui left corner label"><i class="calendar icon"></i></div>
+					</div>
+				</div>
+				<div class="sixteen wide column">
+					<label>Period</label>
+					<div class="ui grid">
+						<div class="eight wide column">
+							<div class="ui left corner labeled input">
+								<input type="time" placeholder="HH:mm:ss" ng-model="filter.from" required>
+								<div class="ui left corner label"><i class="dashboard icon"></i></div>
+							</div>
+						</div>
+						<div class="eight wide column">
+							<div class="ui left corner labeled input">
+								<input type="time" placeholder="HH:mm:ss" ng-model="filter.to" required>
+								<div class="ui left corner label"><i class="dashboard icon"></i></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="eight wide field">
+			<div class="fields">
+				<div class="sixteen wide field">
+				<div class="ui right floated buttons">
+				  <button class="ui labeled icon button" ng-click="reset()"><i class="refresh icon"></i>Reset</button>
+				  <div class="or"></div>
+				  <button class="ui right labeled icon positive button" ng-click="submit()"><i class="save icon"></i>Submit</button>
+				</div>
+				</div>
+			</div>
+			<table class="ui orange sortable celled table">
+				<tr>
+					<th class="center aligned">Student</th>
+					<th class="center aligned">
+						All &nbsp;
+						<div class="ui toggle checkbox">
+							<input type="checkbox" ng-model="filter.selected" ng-change="changeAll()">
+							<label>{{filter.selected?'Present':'Absent'}}</label>
+						</div>
+					</th>
+				</tr>
+				<tr ng-repeat="studstat in studentStats">
+					<td><div class="ui ribbon label"># {{studstat.stud.roll}}. {{studstat.stud.name}}</div></td>
+					<td>
+						<div class="ui slider checkbox">
+							<input type="checkbox" ng-model="studstat.stat">
+							<label>{{studstat.stat?'Present':'Absent'}}</label>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>	
+</form>
+
