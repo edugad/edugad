@@ -1,4 +1,4 @@
-var Batch = require('../model/Batch');
+var Batch = require('../model/batch');
 
 module.exports.create = function(req, res){
 	var batch = new Batch(req.body);

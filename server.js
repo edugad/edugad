@@ -1,8 +1,15 @@
-var express 	= require('express'),
-	app 		= express(),
-	mongoose	= require('mongoose'),
-	multer		= require('multer'),
-	bodyParser 	= require('body-parser');
+var express 	= require('express');
+var app 		= express();
+var mongoose	= require('mongoose');
+var multer		= require('multer');
+var bodyParser 	= require('body-parser');
+var cookieParser = require('cookie-parser');
+//var path 		= require('path');
+var session 	= require('express-session');
+var passport 	= require('passport');
+var strategy 	= require('passport-local').Strategy;
+var mongpass	= require('passport-local-mongoose');
+var bcrypt 		= require('bcrypt-nodejs');
 
 var port = 9000;
 
@@ -26,12 +33,24 @@ app.use('/config', express.static(__dirname + '/client/js/config'));
 app.use('/ctrl', express.static(__dirname + '/client/js/controller'));
 app.use('/dir', express.static(__dirname + '/client/js/directive'));
 app.use('/serv', express.static(__dirname + '/client/js/service'));
+app.use('/fact', express.static(__dirname + '/client/js/factory'));
 
 //add REST apis
-app.use(bodyParser.json());
+app.use(bodyParser.json());	
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(cookieParser());
+// app.use(bodyParser({keepExtensions:true}));
 // app.use(methodOverride('X-HTTP-Method-Override'));
-// app.use(multer({dest: './server/upload/'}));
+
+// app.use(express.static(__dirname + '/public'));
+
+app.use(session({
+	secret: 'puthenveettil',
+	resave: true,
+	saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 //add CORS support
 // app.use(function(req, resp, next){
@@ -46,31 +65,82 @@ app.get('/', function(req, res){
 	res.sendfile(__dirname + '/client/view/index.html');
 });
 
-//upload student
-app.post('/upload/student', function(req, res){
-	res.json({success: true});
+var upload = multer({
+	storage: multer.diskStorage({
+		destination: function (req, file, cb) {
+			cb(null, './server/upload/')
+		}, filename: function (req, file, cb) {
+			cb(null, file.originalname);        
+		}
+	}),
+	fileFilter : function(req, file, cb) {
+		if (['csv', 'xls', 'xlsx'].indexOf(file.originalname.split('.')[file.originalname.split('.').length-1]) === -1) {
+            return cb(new Error('Wrong extension type'));
+        }
+        cb(null, true);
+	}
 });
 
 //student apis
-app.post('/api/student', studentServ.create);
-app.put('/api/student/:id', studentServ.update);
-app.delete('/api/student/:id', studentServ.remove);
-app.get('/api/student/:id', studentServ.find);
 app.get('/api/students', studentServ.list);
+app.post('/api/students', studentServ.create);
+app.get('/api/students/:id', studentServ.find);
+app.put('/api/students/:id', studentServ.update);
+// app.delete('/api/students/:id', studentServ.remove);
+//upload student
+app.post('/upload/students', upload.single('file'), studentServ.upload);
+
+//user apis
+app.get('/api/users', userServ.list);
+app.get('/api/users/:id', userServ.find);
+app.post('/api/users', userServ.create);
+// app.put('/api/users/:id', userServ.update);
+// app.delete('/api/users/:id', userServ.remove);
+app.get('/api/roles', userServ.roles);
+app.post('/api/login', userServ.login);
 
 //batch apis
-app.post('/api/batch', batchServ.create);
-app.put('/api/batch/:id', batchServ.update);
-app.delete('/api/batch/:id', batchServ.remove);
-app.get('/api/batch/:id', batchServ.find);
+app.post('/api/batches', batchServ.create);
+app.put('/api/batches/:id', batchServ.update);
+app.delete('/api/batches/:id', batchServ.remove);
+app.get('/api/batches/:id', batchServ.find);
 app.get('/api/batches', batchServ.list);
 
 //metainfo apis
-app.post('/api/metainfo', metainfoServ.create);
-app.put('/api/metainfo', metainfoServ.update);
-app.get('/api/metainfo', metainfoServ.find);
-app.delete('/api/metainfo', metainfoServ.remove);
+app.post('/api/metainfos', metainfoServ.create);
+app.put('/api/metainfos/:id', metainfoServ.update);
+app.get('/api/metainfos/:id', metainfoServ.find);
+app.delete('/api/metainfos/:id', metainfoServ.remove);
 app.get('/api/metainfos', metainfoServ.list);
 
 //connect mongodb
 mongoose.connect('mongodb://localhost:27017/edugad');
+
+//passport
+passport.serializeUser(function (user, done){
+	return done(null, user._id);
+});
+
+passport.deserializeUser(function (id, done){
+	userServ.find(id, function(err, user){
+		done(err, user);
+	});
+});
+
+passport.use('registerUser', new strategy(
+	{passReqToCallback: true},
+	function(req, username, password, done){
+		var newUser = {
+			username: username,
+			password: password,
+			role: req.body.role,
+			institute: req.body.institute
+		};
+		userServ.create(newUser, function(err){
+			if(err){
+				return done(err);
+			}
+			return done(null, newUser);
+		});
+	}
+	));
