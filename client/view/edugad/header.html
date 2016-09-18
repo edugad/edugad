@@ -1,8 +1,8 @@
 <div class="ui inverted teal segment">
 	<div class="ui secondary menu">
-		<a class="item" ui-sref="home"><h3><i class="book icon"></i>edugad.org</h3></a>
+		<a class="item" ui-sref="edugad.home"><h3><i class="book icon"></i>edugad.org</h3></a>
 		<div class="right menu">
-			<a class="ui item" ui-sref="about">About</a>
+			<a class="ui item" ui-sref="edugad.about">About</a>
 			<a class="ui item" ng-click="show()"><i class="sign in icon"></i>Login</a>
 		</div>
 	</div>
@@ -26,7 +26,7 @@
 						</div>
 						<div class="required field">
 							<label>Password</label>
-							<input type="text" placeholder="password" ng-model="logUser.password">
+							<input type="password" placeholder="password" ng-model="logUser.password">
 						</div>
 						<div class="field">
 							<button class="ui right floated blue submit button" type="submit" ng-click="login()">Sign In</button>

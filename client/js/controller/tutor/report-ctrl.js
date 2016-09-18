@@ -1,16 +1,13 @@
-edugad.controller('ReportCtrl', ['$scope', '$resource', function($scope, $resource) {
+edugad.controller('ReportCtrl', ['$scope', 'ApiFact', function($scope, ApiFact) {
 	$scope.selectedBatch = {};
     $scope.batches = [];
     $scope.students = [];
     $scope.report = [];
 
-	var Batches = $resource('/api/batches');
-    var Students = $resource('/api/students');
-
-    Batches.query(function(data){
+    ApiFact.Batch.query(function(data){
         $scope.batches = data;
     });
-    Students.query(function(data){
+    ApiFact.Student.query(function(data){
         $scope.students = data;
     });
 
@@ -50,12 +47,13 @@ edugad.controller('ReportCtrl', ['$scope', '$resource', function($scope, $resour
         for(var i=0; i<$scope.report.length; i++){
             var set = [];
             set.push($scope.report[i].student.roll+'. '+$scope.report[i].student.name);
-            set.push($scope.report[i].student.presence);
+            set.push($scope.report[i].presence);
             data.push(set);
         }
         return data;
     };
 	$scope.chart = function(){
+        var data = $scope.getData();
 		Highcharts.chart('report-chart', {
             title: {text: 'Attendance Report'},
             credits: {enabled: false},
@@ -63,7 +61,7 @@ edugad.controller('ReportCtrl', ['$scope', '$resource', function($scope, $resour
             yAxis: {min: 0, title: {text: 'Presence (%)'}},
             legend: {enabled: false},
             tooltip: {pointFormat: 'Presence: <b>{point.y:.1f}</b>'},
-            series: [{name: 'Presence', data: $scope.getData(), dataLabels: {enabled: true, rotation: -90, align: 'right', format: '{point.y:.1f}', y: 10, style: {fontSize: '13px', fontFamily: 'Verdana, sans-serif'}}}]
+            series: [{name: 'Presence', data: data, dataLabels: {enabled: true, rotation: -90, align: 'right', format: '{point.y:.1f}', y: 10, style: {fontSize: '13px', fontFamily: 'Verdana, sans-serif'}}}]
         });
 	};
 }]);

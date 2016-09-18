@@ -1,4 +1,4 @@
-edugad.controller('BatchCtrl', ['$scope', '$rootScope', '$resource', function($scope, $rootScope, $resource) {
+edugad.controller('BatchCtrl', ['$scope', '$rootScope', 'ApiFact', function($scope, $rootScope, ApiFact) {
 	$scope.batches = [];
 	$scope.students = [];
 
@@ -10,20 +10,15 @@ edugad.controller('BatchCtrl', ['$scope', '$rootScope', '$resource', function($s
 	};
 	$scope.reset();
 
-	var Batch = $resource('/api/batch');
-	var BatchId = $resource('/api/batch/:id', {id:'@id'});
-	var Batches = $resource('/api/batches');
-	var Students = $resource('/api/students');
-
-	Batches.query(function(data){
+	ApiFact.Batch.query(function(data){
 		$scope.batches = data;
 	});
-	Students.query(function(data){
+	ApiFact.Student.query(function(data){
 		$scope.students = data;
 	});
 
 	$scope.upsert = function(){
-		var batch = new Batch();
+		var batch = new ApiFact.Batch();
 		batch.code = $scope.selectedBatch.code;
 		batch.label = $scope.selectedBatch.label;
 		batch.year = $scope.selectedBatch.year;
@@ -71,7 +66,7 @@ edugad.controller('BatchCtrl', ['$scope', '$rootScope', '$resource', function($s
 
 	$scope.remove = function(stud){
 		$rootScope.$emit('message', {head:'Error on delete!', body:'Please contact admin.', type:'error'});//remove
-		BatchId.$remove({id:stud.id}, function(err){
+		ApiFact.Batch.$remove({id:stud.id}, function(err){
 			if(err){
 				$rootScope.$emit('message', {head:'Error on delete!', body:'Please contact admin.', type:'error'});
 				return;

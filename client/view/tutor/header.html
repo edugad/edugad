@@ -1,12 +1,12 @@
 <div class="ui inverted orange segment">
-<div class="ui secondary menu" ng-init="menu='student';">
+<div class="ui secondary menu">
 	<a class="item"><b><i class="student icon"></i>EduGad University</b></a>
 	<div class="right menu">
-		<a class="{{menu=='student'?'active':'ui'}} item" ui-sref="student" ng-click="menu='student';">Student</a>
-		<a class="{{menu=='batch'?'active':'ui'}} item" ui-sref="batch" ng-click="menu='batch';">Batch</a>
-		<a class="{{menu=='attendance'?'active':'ui'}} item" ui-sref="attendance" ng-click="menu='attendance';">Attendance</a>
-		<a class="{{menu=='report'?'active':'ui'}} item" ui-sref="report" ng-click="menu='report';">Report</a>
-		<a class="ui item" ui-sref="home"><i class="sign out icon"></i>Logout</a>
+		<a class="{{menu==='student'?'active':'ui'}} item" ui-sref="tutor.student" ng-click="setMenu('student')">Student</a>
+		<a class="{{menu==='batch'?'active':'ui'}} item" ui-sref="tutor.batch" ng-click="setMenu('batch')">Batch</a>
+		<a class="{{menu==='attendance'?'active':'ui'}} item" ui-sref="tutor.attendance" ng-click="setMenu('attendance')">Attendance</a>
+		<a class="{{menu==='report'?'active':'ui'}} item" ui-sref="tutor.report" ng-click="setMenu('report')">Report</a>
+		<a class="ui item" ng-click="logout()"><i class="sign out icon"></i>Logout</a>
 	</div>
 </div>
 </div>

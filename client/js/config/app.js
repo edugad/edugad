@@ -1,95 +1,95 @@
-var edugad = angular.module('edugad',['ngResource', 'ui.router']);
+ var edugad = angular.module('edugad',[
+ 	'ngResource',
+ 	'ui.router',
+ 	'ngStorage'
+ ]);
 
 //http://brewhouse.io/blog/2014/12/09/authentication-made-simple-in-single-page-angularjs-applications.html
 
-edugad.config(function($stateProvider, $urlRouterProvider) {
-	$urlRouterProvider.otherwise('/');
+edugad.config(function($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) {
+	// $locationProvider.html5Mode(false).hashPrefix('!');
+
+	//interceptors
+	$httpProvider.interceptors.push('AuthInterceptor');
+
+	//routes
+	$urlRouterProvider.otherwise('/home');
   	$stateProvider
-	    .state('home', {
+	    .state('edugad', {
 	      url: '/',
+	      data: {roles: ['*']},
+	      abstract: true,
 	      views: {
 	      	'header': {
 	      		templateUrl: '/edugad/header.html',
 	      		controller: 'EdugadMenuCtrl'
 	      	},
-	      	'portal': {
+	      	'footer': {
+	      		templateUrl: '/edugad/footer.html'
+	      	}
+	      }
+	    })
+	    .state('edugad.home', {
+	      url: 'home',
+	      views: {
+	      	'portal@': {
 	      		templateUrl: '/edugad/home.html'
-	      	},
-	      	'footer': {
-	      		templateUrl: '/edugad/footer.html'
 	      	}
 	      }
 	    })
-	    .state('about', {
-	      url: '/about',
+	    .state('edugad.about', {
+	      url: 'about',
 	      views: {
-	      	'header': {
-	      		templateUrl: '/edugad/header.html',
-	      		controller: 'EdugadMenuCtrl'
-	      	},
-	      	'portal': {
+	      	'portal@': {
 	      		templateUrl: '/edugad/about.html'
-	      	},
-	      	'footer': {
-	      		templateUrl: '/edugad/footer.html'
 	      	}
 	      }
 	    })
-	    .state('student', {
-	      url: '/student',
+	    .state('tutor', {
+	      url: '/tutor',
+	      data: {roles: ['tutor', 'admin']},
+	      abstract: true,
 	      views: {
 	      	'header': {
-	      		templateUrl: '/tutor/header.html'
+	      		templateUrl: '/tutor/header.html',
+	      		controller: 'TutorMenuCtrl'
 	      	},
 	      	'footer': {
 	      		templateUrl: '/tutor/footer.html'
-	      	},
-	      	'portal': {
+	      	}
+	      }
+	    })
+	    .state('tutor.student', {
+	      url: '/student',
+	      views: {
+	      	'portal@': {
 	      		templateUrl: '/tutor/student.html',
 	      		controller: 'StudentCtrl'
 	      	}
 	      }
 	    })
-	    .state('batch', {
+	    .state('tutor.batch', {
 	      url: '/batch',
 	      views: {
-	      	'header': {
-	      		templateUrl: '/tutor/header.html'
-	      	},
-	      	'footer': {
-	      		templateUrl: '/tutor/footer.html'
-	      	},
-	      	'portal': {
+	      	'portal@': {
 	      		templateUrl: '/tutor/batch.html',
 	      		controller: 'BatchCtrl'
 	      	}
 	      }
 	    })
-	    .state('attendance', {
+	    .state('tutor.attendance', {
 	      url: '/attendance',
 	      views: {
-	      	'header': {
-	      		templateUrl: '/tutor/header.html'
-	      	},
-	      	'footer': {
-	      		templateUrl: '/tutor/footer.html'
-	      	},
-	      	'portal': {
+	      	'portal@': {
 	      		templateUrl: '/tutor/attendance.html',
 	      		controller: 'AttendanceCtrl'
 	      	}
 	      }
 	    })
-	    .state('report', {
+	    .state('tutor.report', {
 	      url: '/report',
 	      views: {
-	      	'header': {
-	      		templateUrl: '/tutor/header.html'
-	      	},
-	      	'footer': {
-	      		templateUrl: '/tutor/footer.html'
-	      	},
-	      	'portal': {
+	      	'portal@': {
 	      		templateUrl: '/tutor/report.html',
 	      		controller: 'ReportCtrl'
 	      	}

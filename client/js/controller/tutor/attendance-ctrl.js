@@ -1,4 +1,4 @@
-edugad.controller('AttendanceCtrl', ['$scope', '$rootScope', '$resource', function($scope, $rootScope, $resource) {
+edugad.controller('AttendanceCtrl', ['$scope', '$rootScope', 'ApiFact', function($scope, $rootScope, ApiFact) {
 	Date.prototype.addTime = function(time) {    
 	   this.setTime(this.getTime() + time); 
 	   return this;   
@@ -13,14 +13,10 @@ edugad.controller('AttendanceCtrl', ['$scope', '$rootScope', '$resource', functi
 	};
 	$scope.reset();
 
-	var Batch = $resource('/api/batch/:id', {id:'@id'}, {update:{method:'PUT'}});
-	var Batches = $resource('/api/batches');
-	var Students = $resource('/api/students');
-
-	Batches.query(function(data){
+	ApiFact.Batch.query(function(data){
 		$scope.batches = data;
 	});
-	Students.query(function(data){
+	ApiFact.Student.query(function(data){
 		$scope.students = data;
 	});
 
@@ -71,7 +67,7 @@ edugad.controller('AttendanceCtrl', ['$scope', '$rootScope', '$resource', functi
 			}
 		}
 		$scope.filter.batch.attendances.push(attendance);
-		Batch.update({id:$scope.filter.batch._id}, $scope.filter.batch);
+		ApiFact.Batch.update({id:$scope.filter.batch._id}, $scope.filter.batch);
 		var time = new Date(attendance.year, attendance.month, attendance.date, attendance.hrFrom, attendance.minFrom, 0, 0);
 		var msg = $scope.filter.batch.label+' at '+time.toString();
 		$scope.reset();

@@ -1,8 +1,10 @@
-edugad.controller('EdugadMenuCtrl', ['$scope', '$rootScope', '$resource', '$state', function($scope, $rootScope, $resource, $state) {
-
-	var User = $resource('/api/user');
+edugad.controller('EdugadMenuCtrl', ['$scope', '$rootScope', '$state', '$sessionStorage', 'ApiFact', function($scope, $rootScope, $state, $sessionStorage, ApiFact) {
 
 	$scope.logUser = {};
+
+	// $scope.roles = ApiFact.UserRoles.query(function(){
+ //        console.log(JSON.stringify($scope.roles));
+ //    });
 
 	$scope.show = function(){
 		angular.element('.ui.login.modal').modal('show');
@@ -12,13 +14,22 @@ edugad.controller('EdugadMenuCtrl', ['$scope', '$rootScope', '$resource', '$stat
 	};
 
 	$scope.login = function(){
-		//var user = new User();
-		if($scope.logUser.username!=null && $scope.logUser.username!='' && $scope.logUser.password!=null && $scope.logUser.password!=''){
-			$state.transitionTo('student');
-			$scope.hide();
-		}else{
-			$scope.hide();
+		var loggedUser = new ApiFact.UserLogin();
+        loggedUser.username = $scope.logUser.username;
+        loggedUser.password = $scope.logUser.password;
+        loggedUser.$save(function(data){
+            $scope.hide();
+            if(data.error){
+            	$rootScope.$emit('message', {head:'Invalid Login!', body:'Please enter valid credentials.', type:'error'});
+            }else{
+            	$sessionStorage.context = data;
+            	// console.log(JSON.stringify(data));//set context
+            	$state.transitionTo('tutor.student');
+            }
+			
+        },function(err){
+            $scope.hide();
 			$rootScope.$emit('message', {head:'Invalid Login!', body:'Please enter valid credentials.', type:'error'});
-		}
+        });
 	};
 }]);

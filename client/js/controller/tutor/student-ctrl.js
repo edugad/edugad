@@ -1,18 +1,14 @@
-edugad.controller('StudentCtrl', ['$scope', '$rootScope', '$resource', 'fileUpload', function($scope, $rootScope, $resource, fileUpload) {
+edugad.controller('StudentCtrl', ['$scope', '$rootScope', 'ApiFact', 'fileUpload', function($scope, $rootScope, ApiFact, fileUpload) {
 	$scope.students = [];
 	$scope.newstudent = {};
 
-	var Student = $resource('/api/student');
-	var StudentId = $resource('/api/student/:id', {id:'@id'});
-	var Students = $resource('/api/students');
-
-	Students.query(function(data){
+	ApiFact.Student.query(function(data){
 		$scope.students = data;
 	});
 
 	$scope.upload = function(){
 		var file = $scope.studentFile;
-        var uploadUrl = "/upload/student";
+        var uploadUrl = "/upload/students";
         fileUpload.upload(file, uploadUrl);
         $scope.hide();
         $rootScope.$emit('message', {head:'Upload is disabled!', body:'Please contact admin.', type:'error'});
@@ -27,7 +23,7 @@ edugad.controller('StudentCtrl', ['$scope', '$rootScope', '$resource', 'fileUplo
 	};
 
 	$scope.add = function(){
-		var student = new Student();
+		var student = new ApiFact.Student();
 		student.roll = $scope.newstudent.roll;
 		student.name = $scope.newstudent.name;
 		student.year = $scope.newstudent.year;
@@ -43,12 +39,12 @@ edugad.controller('StudentCtrl', ['$scope', '$rootScope', '$resource', 'fileUplo
 
 	$scope.remove = function(stud){
 		$rootScope.$emit('message', {head:'Error on delete!', body:'Please contact admin.', type:'error'});//remove
-		StudentId.$remove({id:stud.id}, function(err){
+		ApiFact.Student.$remove({id:stud.id}, function(err){
 			if(err){
 				$rootScope.$emit('message', {head:'Error on delete!', body:'Please contact admin.', type:'error'});
 				return;
 			}
-			Students.query(function(data){
+			ApiFact.Student.query(function(data){
 				$scope.students = data;
 				$rootScope.$emit('message', {head:'Success!', body:'The student '+stud.name+' details are deleted.'});
 			});
