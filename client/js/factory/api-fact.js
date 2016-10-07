@@ -7,6 +7,7 @@ edugad.factory('ApiFact', function($resource) {
 		Student: $resource('/api/students/:id', { id: '@_id' }, {update: {method: 'PUT'}}),
 
 		Batch: $resource('/api/batches/:id', { id: '@_id' }, {update: {method: 'PUT'}}),
+		Periods: $resource('/api/periods'),
 
 		Metainfo: $resource('/api/metainfos/:id', { id: '@_id' }, {update: {method: 'PUT'}})
 	};

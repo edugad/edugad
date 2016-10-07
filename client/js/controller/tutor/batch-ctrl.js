@@ -1,6 +1,7 @@
 edugad.controller('BatchCtrl', ['$scope', '$rootScope', 'ApiFact', function($scope, $rootScope, ApiFact) {
 	$scope.batches = [];
 	$scope.students = [];
+	// $scope.selectedBatch = {category: 'daily'};
 
 	$scope.reset = function(){
 		$scope.selectedBatch = {active:true};
@@ -17,13 +18,19 @@ edugad.controller('BatchCtrl', ['$scope', '$rootScope', 'ApiFact', function($sco
 		$scope.students = data;
 	});
 
+	ApiFact.Periods.query(function(data){
+        $scope.categories = data;
+    });
+
 	$scope.upsert = function(){
+		console.log(JSON.stringify($scope.selectedBatch));
 		var batch = new ApiFact.Batch();
 		batch.code = $scope.selectedBatch.code;
 		batch.label = $scope.selectedBatch.label;
 		batch.year = $scope.selectedBatch.year;
 		batch.active = $scope.selectedBatch.active;
 		batch.contact = $scope.selectedBatch.contact;
+		batch.category = $scope.selectedBatch.category;
 		batch.students = [];
 		for(var i=0; i<$scope.batchedStudents.length; i++){
 			batch.students.push($scope.batchedStudents[i]._id);
@@ -38,7 +45,7 @@ edugad.controller('BatchCtrl', ['$scope', '$rootScope', 'ApiFact', function($sco
 				$scope.hide();
 			});
 		}else{
-			batch.$update(function(data){
+			batch.$update({id:batch._id}, function(data){
 				$scope.batches.push(data);
 				$scope.selectedBatch = {};
 				$scope.hide();	

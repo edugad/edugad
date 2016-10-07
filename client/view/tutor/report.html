@@ -6,6 +6,7 @@
 					<select class="ui dropdown" ng-options="batch as batch.code+' # '+batch.label+' - '+batch.year for batch in batches" ng-model="selectedBatch" ng-change="changeBatch()"></select>
 		</div>
 		<div class="eight wide field" ng-show="report.length>0">
+			<div class="ui disabled input"><input type="text" value="The attendance is taken {{selectedBatch.category}}"></div>
 			<button class="ui right floated labeled icon button" ng-click="download()"><i class="download icon"></i>Download</button>
 		</div>
 	</div>
@@ -31,3 +32,14 @@
 <div class="ui orange raised segment" ng-show="report.length>0">
 	<div id="report-chart">Your browser is not capable of painting the graph here!</div>
 </div>
+
+<table class="ui orange sortable celled table" ng-show="report.length>0 && selectedBatch.category==='daily'">
+	<tr>
+		<th>Student</th>
+		<th ng-repeat="stat in report[0].stats">{{stat.date | date}}</th>
+	</tr>
+	<tr ng-repeat="record in report">
+		<td><div class="ui ribbon label"># {{record.student.roll}}. {{record.student.name}}</div></td>
+		<td ng-repeat="stat in record.stats">{{stat.stat}}</td>
+	</tr>
+</table>

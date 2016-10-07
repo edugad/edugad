@@ -11,7 +11,7 @@ var strategy 	= require('passport-local').Strategy;
 var mongpass	= require('passport-local-mongoose');
 var bcrypt 		= require('bcrypt-nodejs');
 
-var port = 9000;
+var port = 8080;
 
 var studentServ 	= require('./server/service/student-serv'),
 	batchServ 		= require('./server/service/batch-serv'),
@@ -105,6 +105,7 @@ app.put('/api/batches/:id', batchServ.update);
 app.delete('/api/batches/:id', batchServ.remove);
 app.get('/api/batches/:id', batchServ.find);
 app.get('/api/batches', batchServ.list);
+app.get('/api/periods', batchServ.periods);
 
 //metainfo apis
 app.post('/api/metainfos', metainfoServ.create);

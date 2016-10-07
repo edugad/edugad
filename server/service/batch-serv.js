@@ -34,3 +34,7 @@ module.exports.update = function(req, res){
 		res.json(batch);
 	});
 };
+
+module.exports.periods = function(req, res){
+	res.json(Batch.schema.path('category').enumValues);
+};

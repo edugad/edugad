@@ -9,13 +9,16 @@
 				<div class="seven wide required field">
 					<input type="text" ng-model="selectedBatch.label" placeholder="Name">
 				</div>
-				<div class="three wide field">
+				<div class="two wide field">
 					<input type="number" ng-model="selectedBatch.year" placeholder="Year">
 				</div>
-				<div class="three wide field">
+				<div class="two wide column">
+					<select class="ui dropdown" ng-options="category as category for category in categories" ng-model="selectedBatch.category"></select>
+				</div>
+				<div class="two wide field">
 					<div class="ui toggle checkbox">
 						<input type="checkbox" name="public" ng-model="selectedBatch.active">
-						<label>{{selectedBatch.active?'Active':'Deactivated'}}</label>
+						<label>{{selectedBatch.active?'Active':'Inactive'}}</label>
 					</div>
 				</div>
 			</div>
@@ -50,13 +53,14 @@
 
 <table class="ui orange table">
 	<tr>
-		<th>Code</th><th>Label</th><th>Year</th><th>Status</th><th>Students</th>
+		<th>Code</th><th>Label</th><th>Year</th><th>Attendance</th><th>Status</th><th>Students</th>
 		<th>Options <a ng-click="show()"><i class="add icon"></i></a> <a ng-click="upload()"><i class="upload icon"></i></a></th>
 	</tr>
 	<tr ng-repeat="batch in batches">
 		<td>{{batch.code}}</td>
 		<td>{{batch.label}}</td>
 		<td>{{batch.year}}</td>
+		<td>{{batch.category}}</td>
 		<td>{{batch.active?'Active':'Deactivated'}}</td>
 		<td>{{batch.students.length}}</td>
 		<td>

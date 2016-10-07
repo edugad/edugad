@@ -1,15 +1,15 @@
-<form class="ui form">
+        <form class="ui form">
 	<h4 class="ui dividing header">Take Attendance</h4>
 	<div class="fields">
-		<div class="eight wide field">
+		<div class="six wide field">
 			<div class="ui grid">
-				<div class="sixteen wide column">
-					<label>Faculty</label>
-					<div class="ui disabled input"><input type="text" placeholder="Auto-populated" ng-model="filter.faculty"></div>
-				</div>
 				<div class="sixteen wide column">
 					<label>Batch</label>
 					<select class="ui dropdown" ng-options="batch as batch.code+' # '+batch.label+' - '+batch.year for batch in batches" ng-model="filter.batch" ng-change="changeBatch()"></select>
+				</div>
+				<div class="sixteen wide column">
+					<label>Faculty</label>
+					<div class="ui disabled input"><input type="text" placeholder="Auto-populated" value="{{filter.faculty.name}}"></div>
 				</div>
 				<div class="sixteen wide column">
 					<label>Date</label>
@@ -18,9 +18,13 @@
 						<div class="ui left corner label"><i class="calendar icon"></i></div>
 					</div>
 				</div>
-				<div class="sixteen wide column">
+				<div class="sixteen wide column" ng-hide="filter.batch.students === undefined">
 					<label>Period</label>
-					<div class="ui grid">
+					<div class="ui disabled input" ng-show="filter.batch.category==='daily'">
+						<input type="text" value="Attendance is taken for the date selected">
+					</div>
+					<select class="ui dropdown" ng-show="filter.batch.category==='periodically'" ng-options="period as period for period in [1, 2, 3, 4, 5, 6, 7, 8]" ng-model="filter.period"></select>
+					<div class="ui grid" ng-show="filter.batch.category==='hourly'">
 						<div class="eight wide column">
 							<div class="ui left corner labeled input">
 								<input type="time" placeholder="HH:mm:ss" ng-model="filter.from" required>
@@ -37,7 +41,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="eight wide field">
+		<div class="ten wide field" ng-hide="filter.batch.students === undefined">
 			<div class="fields">
 				<div class="sixteen wide field">
 				<div class="ui right floated buttons">

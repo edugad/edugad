@@ -1,4 +1,4 @@
-edugad.controller('AttendanceCtrl', ['$scope', '$rootScope', 'ApiFact', function($scope, $rootScope, ApiFact) {
+edugad.controller('AttendanceCtrl', ['$scope', '$rootScope', '$sessionStorage', 'ApiFact', function($scope, $rootScope, $sessionStorage, ApiFact) {
 	Date.prototype.addTime = function(time) {    
 	   this.setTime(this.getTime() + time); 
 	   return this;   
@@ -6,10 +6,11 @@ edugad.controller('AttendanceCtrl', ['$scope', '$rootScope', 'ApiFact', function
 	$scope.filter = {};
 	$scope.batches = [];
 	$scope.students = [];
+	$scope.faculty = {id:$sessionStorage.context._id, name:$sessionStorage.context.username};
 
 	$scope.reset = function(){
 		$scope.studentStats = [];
-		$scope.filter = {batch:{}, date:new Date(), from:new Date(), to:new Date().addTime(1*60*60*1000), selected:false, faculty:'Default User'};
+		$scope.filter = {batch:{}, date:new Date(), from:new Date(), to:new Date().addTime(1*60*60*1000), period:1, selected:false, faculty:$scope.faculty};
 	};
 	$scope.reset();
 
@@ -39,14 +40,19 @@ edugad.controller('AttendanceCtrl', ['$scope', '$rootScope', 'ApiFact', function
 	
 	$scope.submit = function(){
 		//var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
+		
 		var attendance = {};
 		attendance.year = $scope.filter.date.getFullYear();
 		attendance.month = $scope.filter.date.getMonth();
 		attendance.date = $scope.filter.date.getDate();
-		attendance.hrFrom = $scope.filter.from.getHours();
-		attendance.minFrom = $scope.filter.from.getMinutes();
-		attendance.hrTo = $scope.filter.to.getHours();
-		attendance.minTo = $scope.filter.to.getMinutes();
+		if($scope.filter.batch.category==='hourly'){
+			attendance.hrFrom = $scope.filter.from.getHours();
+			attendance.minFrom = $scope.filter.from.getMinutes();
+			attendance.hrTo = $scope.filter.to.getHours();
+			attendance.minTo = $scope.filter.to.getMinutes();
+		}else if($scope.filter.batch.category==='periodically'){
+			attendance.period = $scope.filter.period;
+		}
 		attendance.faculty = $scope.filter.faculty;
 		attendance.rolls = [];
 		for(var i=0; i<$scope.studentStats.length; i++){
@@ -60,7 +66,8 @@ edugad.controller('AttendanceCtrl', ['$scope', '$rootScope', 'ApiFact', function
 				var att = $scope.filter.batch.attendances[i];
 				if(attendance.year==att.year && attendance.month==att.month && attendance.date==att.date
 					 && attendance.hrFrom==att.hrFrom && attendance.minFrom==att.minFrom
-					 && attendance.hrTo==att.hrTo && attendance.minTo==att.minTo){
+					 && attendance.hrTo==att.hrTo && attendance.minTo==att.minTo
+					 && $scope.filter.batch.category==='daily'){
 					$rootScope.$emit('message', {head:'Attendance is not required!', body:'The attendance is already taken.', type:'error'});
 					return;
 				}
